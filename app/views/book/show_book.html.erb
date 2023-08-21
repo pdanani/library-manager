@@ -1,0 +1,42 @@
+<div class="container" style="margin-top:15px;">
+  <%= link_to "All books", admin_books_path("search", 1), :class => 'btn btn-default btn-small', :style => 'margin-top:15px;' %>
+</div>
+
+<div class="container">
+  <h2>Show book <%= @book.id%></h2>
+    <table class="table table-striped" style="width:50%;">
+      <tbody>
+        <tr>
+          <td>Title</td>
+          <td><%= link_to @book.title.to_s, admin_book_update_title_path, :class => 'editable_title', :data => { :type => 'text', :pk => @book.id, :url => admin_book_update_title_path, :params => {:authenticity_token => form_authenticity_token}}%></td>
+        </tr>
+        <tr>
+          <td>Author</td>
+          <td><%= link_to @book.author.to_s, admin_book_update_author_path, :class => 'editable_author', :data => { :type => 'text', :pk => @book.id, :url => admin_book_update_author_path, :params => {:authenticity_token => form_authenticity_token}}%></td>
+        </tr>
+        <tr>
+          <td>ISBN</td>
+          <td><%= link_to @book.isbn.to_s, admin_book_update_isbn_path, :class => 'editable_isbn', :data => { :type => 'text', :pk => @book.id, :url => admin_book_update_isbn_path, :params => {:authenticity_token => form_authenticity_token}}%></td>
+        </tr>
+        <tr>
+          <td>Copies</td>
+          <td><%= link_to @book.count_copies.to_s, admin_book_update_count_copies_path, :class => 'editable_count_copies', :data => { :type => 'text', :pk => @book.id, :url => admin_book_update_count_copies_path, :params => {:authenticity_token => form_authenticity_token}}%></td>
+        </tr>
+        <tr>
+          <td>Reviews</td>
+          <td><%= link_to "Reviews", admin_reviews_path(@book.id), :class => 'btn btn-small btn-default'%></td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+<script>
+  $.fn.editable.defaults.mode = 'popup';
+  
+  $(document).ready(function() {
+  $('.editable_title').editable({tpl: '<input type="text" style="width:500px;"/>'});
+  $('.editable_author').editable({tpl: '<input type="text" style="width:500px;"/>'});
+  $('.editable_isbn').editable({tpl: '<input type="text" style="width:500px;"/>'});
+  $('.editable_count_copies').editable({tpl: '<input type="text" style="width:500px;"/>'});
+  });
+</script>

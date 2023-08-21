@@ -1,0 +1,34 @@
+<% @name = flash[:save_review_name].to_s %>
+<% @review = flash[:save_review_review].to_s %>
+
+<div class="container">
+  <%= link_to "All books", admin_books_path("search", 1), :class => 'btn btn-default btn-small', :style => 'margin-top:15px;' %>
+</div>
+
+<div class="container">
+  <h2>Add review for book <%= link_to @book.title.to_s, admin_show_book_path(@book.id), :class => 'btn btn-small btn-default'%></h2>
+  
+  <%= form_for :anything, url: admin_save_review_path, :html => { :class => 'col-sm-4', :autocomplete => 'off' } do |f| %>
+
+    <div class="form-group">
+      <label for="anything_name">Name*</label>
+      <%= f.text_field :name, value: @name, :class => 'form-control' %>
+    </div> 
+    <%= f.hidden_field :book_id, value: @book_id, :class => 'form-control' %>
+    <div class="form-group">
+      <label for="anything_review">Review*</label>      
+      <%= f.text_area :review, value: @review, :class => 'form-control', :cols => 10, :rows => 8, :style => 'height: 250px;' %>      
+    </div> 
+    
+    <%= f.submit "Save review", :class => 'btn btn-success' %>
+  <% end %>
+</div>
+<div class="clear"></div>
+</br>
+<div class="clear"></div>
+</br>
+<div class="clear"></div>
+</br>
+<div class="clear"></div>
+<script>
+</script>

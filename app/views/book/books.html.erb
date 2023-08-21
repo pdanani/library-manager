@@ -1,0 +1,99 @@
+<div class="container" style="width:100%;">
+  <h2>Books<td>&nbsp;<span class="badge"><%= @nr_books%></span>&nbsp;
+    <% if cookies[:user_connected].to_s == "Administrator" then %>
+      <%= link_to "Add book", admin_add_book_path, :class => 'btn btn-small btn-success'%>
+    <% end %>
+    </br>
+  </h2>
+  <div class="clear"></div>
+  <input id="search_input" type="text" placeHolder="Search..." autocomplete="off" /> <div id="search_button" class="btn btn-small btn-success">Search</div>
+  <%= link_to "Restart", admin_books_path("search",  1), :class => "btn btn-small btn-default"%>
+  <div class="clear"></div>
+  <% if @books.size > 0 then %>
+    <div class="table-responsive" style="width:100%;">
+      <table class="table table-striped">
+        <thead>
+<!--          <th></th>-->
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Copies</th>
+          <th>Operations</th>
+        </thead>
+        <tbody>
+          <% for @book in @books do%>
+            <tr>
+<!--              <td><%= link_to "Show", admin_show_book_path(@book.id), :class => 'btn btn-small btn-default'%></td>-->
+              <td><%= link_to @book.title.to_s, admin_book_update_title_path, :class => 'editable_title', :data => { :type => 'text', :pk => @book.id, :url => admin_book_update_title_path, :params => {:authenticity_token => form_authenticity_token}}%></td>
+              <td><%= link_to @book.author.to_s, admin_book_update_author_path, :class => 'editable_author', :data => { :type => 'text', :pk => @book.id, :url => admin_book_update_author_path, :params => {:authenticity_token => form_authenticity_token}}%></td>
+              <td><%= link_to @book.isbn.to_s, admin_book_update_isbn_path, :class => 'editable_isbn', :data => { :type => 'text', :pk => @book.id, :url => admin_book_update_isbn_path, :params => {:authenticity_token => form_authenticity_token}}%></td>
+              <td><%= link_to @book.count_copies.to_s, admin_book_update_count_copies_path, :class => 'editable_count_copies', :data => { :type => 'text', :pk => @book.id, :url => admin_book_update_count_copies_path, :params => {:authenticity_token => form_authenticity_token}}%></td>
+              <td>
+                <% if cookies[:user_connected].to_s == "Administrator" then %>
+                  <% if @book.count_copies.to_i > 0 then %>
+                    <%= link_to "Checkout", checkout_book_path(@book.id), :class => 'btn btn-default btn-small'%>
+                  <% end %>
+                <% elsif cookies[:user_connected].to_s == "Patron" then %>                
+                  <%= link_to "Add reviews", admin_add_review_path(@book.id), :class => 'btn btn-small btn-default' %>&nbsp;
+                  <%= link_to "View reviews", admin_reviews_path(@book.id), :class => 'btn btn-small btn-default' %>
+                <% end %>
+              &nbsp;<%= link_to "Delete", admin_delete_book_path(@book.id), :class => 'btn btn-danger btn-small'%></td>   
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <%else %>
+    <h3>No book was found.</h3>
+  <%end %>
+  <% if @nr_books > ApplicationRecord.nr_items_per_page then %>
+    <div class="clear"></div>
+    <ul class="pager">
+      <li id="first_page" class="previous"><%= link_to "1", admin_books_path(@search, 1)%></li>&nbsp;
+      <li class="previous"><%= link_to "Previous", admin_books_path(@search,  @previous_page)%></li>
+      <li><%= @page %>/<%= @nr_pages %></li>
+      <li id="last_page" class="next"><%= link_to "Last", admin_books_path(@search, @nr_pages)%></li>
+      <li class="next"><%= link_to "Next", admin_books_path(@search, @next_page)%></li>   
+    </ul>
+  <% end %>
+</div>
+<br/>
+
+<script>
+  $(".date_chosen").datepicker({
+    format: "yyyy-mm-dd"
+  });
+
+  $.fn.editable.defaults.mode = 'popup';
+  
+  $(document).ready(function() {
+    $('.editable_title').editable({tpl: '<input type="text" style="width:500px;"/>'});
+    $('.editable_author').editable({tpl: '<input type="text" style="width:500px;"/>'});
+    $('.editable_isbn').editable({tpl: '<input type="text" style="width:500px;"/>'});
+    $('.editable_count_copies').editable({tpl: '<input type="text" style="width:500px;"/>'});
+  });
+
+  var search_term = "<%=@search%>";
+  if(search_term != "search"){
+    $("#search_input").val("<%=@search%>");
+  }
+    $("#search_button").click(function(){
+      var search_input = $("#search_input").val();
+      if(search_input == ""){
+        alert("The search term is empty.");
+      }
+      else if(String(search_input).indexOf('/') > -1){
+        alert("The search term contains '/' which is forbidden.");
+      }   
+      else if(String(search_input).indexOf('\\') > -1){
+        alert("The search term contains '\\' which is forbidden.");
+      }   
+      else{
+        var url_split = String(window.location.pathname).split("/");
+        url_split[3] = search_input.replace(" ","%20"); 
+        url_split[url_split.length - 1] = "1"   
+        window.location = url_split.join("/");
+      }
+    });
+  
+</script>

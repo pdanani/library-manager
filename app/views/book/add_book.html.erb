@@ -1,0 +1,46 @@
+<% @title = flash[:save_book_title].to_s %>
+<% @author = flash[:save_book_author].to_s %>
+<% @isbn = flash[:save_book_isbn].to_s %>
+<% @count_copies = flash[:save_book_count_copies].to_s %>
+
+<div class="container">
+  <%= link_to "All books", admin_books_path("search",  1), :class => 'btn btn-default btn-small', :style => 'margin-top:15px;' %>
+</div>
+
+<div class="container">
+  <h2>Add book</h2>
+  
+  <%= form_for :anything, url: admin_save_book_path, :html => { :class => 'col-sm-4', :autocomplete => 'off' } do |f| %>
+
+    <div class="form-group">
+      <label for="anything_title">Title*</label>
+      <%= f.text_field :title, value: @title, :class => 'form-control' %>
+    </div> 
+
+    <div class="form-group">
+      <label for="anything_author">Author*</label>
+      <%= f.text_field :author, value: @author, :class => 'form-control' %>
+    </div> 
+
+    <div class="form-group">
+      <label for="anything_isbn">ISBN*</label>
+      <%= f.text_field :isbn, value: @isbn, :class => 'form-control' %>
+    </div> 
+
+    <div class="form-group">
+      <label for="anything_count_copies">Copies</label>
+      <%= f.text_field :count_copies, value: @count_copies, :class => 'form-control' %>
+    </div> 
+    
+    <%= f.submit "Save book", :class => 'btn btn-success' %>
+  <% end %>
+</div>
+<div class="clear"></div>
+</br>
+<div class="clear"></div>
+</br>
+<div class="clear"></div>
+</br>
+<div class="clear"></div>
+<script>
+</script>

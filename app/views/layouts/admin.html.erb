@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Admin sample app</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'admin', media: 'all' %>
+    <%= javascript_include_tag 'admin' %>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+  </head>
+
+  <body> 
+      <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <ul class="nav navbar-nav">
+              <% if @tab == "admin" then %>
+                <li id="li_admin_home" class="active"><%= link_to "Home", admin_index_path %></li>  
+              <% else %>
+                <li id="li_admin_home"><%= link_to "Home", admin_index_path %></li>  
+              <% end %>
+<!--              <li>User type: <%= cookies[:user_connected].to_s %></li>-->
+              <% if cookies[:user_connected].to_s == "Administrator" then %>
+                <li id="li_user_connected"><%= link_to "Connected as Administrator. Switch to Patron.", connect_user_path("Patron") %></li> 
+              <% elsif cookies[:user_connected].to_s == "Patron" %>
+                <li id="li_user_connected"><%= link_to "Connected as Patron. Switch to Administrator.", connect_user_path("Administrator") %></li> 
+              <% end %>
+            </ul>               
+          </div>
+      </nav>
+   <div class="clear"></div>
+     <% if flash[:success] then %>
+       </br>
+       <div class="container col-sm-6" style="max-width:600px;">
+        <div class="alert alert-success">
+          <% @successes = flash[:success].split(".") %>
+          <% for @success in @successes do %>
+            <%= @success %>. </br>
+          <% end %>
+        </div>
+       </div>
+      <% end %>  
+     <% if flash[:error] then %>
+       </br>
+       <div class="container col-sm-6" style="max-width:600px;">
+        <div class="alert alert-danger">
+          <% @errors = flash[:error].split(".") %>
+          <% for @error in @errors do %>
+            <%= @error %>. </br>
+          <% end %>
+        </div>
+       </div>
+      <% end %>  
+    <div class="clear"></div>
+    <div class="container" style="width:100%;">
+      <%= yield %>
+    </div>
+    <div class="clear"></div>
+  
+  </body>
+</html>
